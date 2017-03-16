@@ -55,7 +55,7 @@ void print_cell_status(struct cell cell)
 void print_generation_alive_status(struct cell ***generation, int size)
 {
     int i, j, k;
-    /* PRINT */
+
     for(i = 0; i < size; i++)
     {
         printf("\nz = %d\n", i);
@@ -72,7 +72,7 @@ void print_generation_alive_status(struct cell ***generation, int size)
 void print_generation_alive_neighbors(struct cell ***generation, int size)
 {
     int i, j, k;
-    /* PRINT */
+
     for(i = 0; i < size; i++)
     {
         printf("\nz = %d\n", i);
@@ -86,7 +86,63 @@ void print_generation_alive_neighbors(struct cell ***generation, int size)
         }
     }
 }
+struct cell *** create_dimension_z(int size)
+{
+    struct cell ***new;
+    
+    new = (struct cell ***) malloc(size * sizeof(struct cell **));
 
+    return new;
+}
+
+struct cell ** create_dimension_y(int size)
+{
+    struct cell **new;
+    
+    new = (struct cell **) malloc(size * sizeof(struct cell *));
+
+    return new;
+}
+
+struct cell * create_dimension_x(int size)
+{
+    struct cell *new;
+    
+    new = (struct cell *) malloc(size * sizeof(struct cell));
+
+    return new;
+}
+
+void initialize_cell(struct cell *cell, int z, int y, int x)
+{
+    cell->alive = 0;
+    cell->alive_neighbors = 0;
+    cell->coordinates.x = x;
+    cell->coordinates.y = y;
+    cell->coordinates.z = z;
+}
+
+struct cell *** create_generation(int size)
+{
+    struct cell ***new;
+    int i, j, k;
+
+    new = create_dimension_z(size);
+    for(i = 0; i < size; i++)
+    {
+        new[i] = create_dimension_y(size);
+        for(j = 0; j < size; j++)
+        {
+            new[i][j] = create_dimension_x(size);
+            for(k = 0; k < size; k++)
+            {
+                initialize_cell(&(new[i][j][k]), i, j, k);
+            }
+        }
+    }
+
+    return new;
+}
 
 /*
 void print_dimension_x(struct cell)
@@ -102,8 +158,6 @@ void print_dimension_z(struct cell)
 
 }
 */
-
-
 
 
 
@@ -127,40 +181,9 @@ int main(int argc, char *argv[])
 
 	/* input_fd = fopen(input_filename, "r"); */
 
-	current_generation = (struct cell ***) malloc(size * sizeof(struct cell **));
-	for(i = 0; i < size; i++)
-	{
-		current_generation[i] = (struct cell **) malloc(size * sizeof(struct cell *));
-		for(j = 0; j < size; j++)
-		{
-			current_generation[i][j] = (struct cell *) malloc(size * sizeof(struct cell));
-			for(k = 0; k < size; k++)
-			{
-				current_generation[i][j][k].alive = 0;
-				current_generation[i][j][k].alive_neighbors = 0;
-				current_generation[i][j][k].coordinates.x = k;
-				current_generation[i][j][k].coordinates.y = j;
-				current_generation[i][j][k].coordinates.z = i;
-			}
-		}
-	}
-	next_generation = (struct cell ***) malloc(size * sizeof(struct cell **));
-	for(i = 0; i < size; i++)
-	{
-		next_generation[i] = (struct cell **) malloc(size * sizeof(struct cell *));
-		for(j = 0; j < size; j++)
-		{
-			next_generation[i][j] = (struct cell *) malloc(size * sizeof(struct cell));
-			for(k = 0; k < size; k++)
-			{
-				next_generation[i][j][k].alive = 0;
-				next_generation[i][j][k].alive_neighbors = 0;
-				next_generation[i][j][k].coordinates.x = k;
-				next_generation[i][j][k].coordinates.y = j;
-				next_generation[i][j][k].coordinates.z = i;
-			}
-		}
-	}
+    current_generation = create_generation(size);
+	next_generation = create_generation(size),
+
 
 	current_generation[0][0][0].alive = 1;
 	current_generation[0][2][0].alive = 1;
@@ -187,7 +210,7 @@ int main(int argc, char *argv[])
 							current_generation[i+1][j][k].alive_neighbors++;
 						else
 							current_generation[0][j][k].alive_neighbors++;
-						if(i-1 > 0)
+						if(i-1 >= 0)
 							current_generation[i-1][j][k].alive_neighbors++;
 						else
 							current_generation[size-1][j][k].alive_neighbors++;
@@ -195,7 +218,7 @@ int main(int argc, char *argv[])
 							current_generation[i][j+1][k].alive_neighbors++;
 						else
 							current_generation[i][0][k].alive_neighbors++;
-						if(j-1 > 0)
+						if(j-1 >= 0)
 							current_generation[i][j-1][k].alive_neighbors++;
 						else
 							current_generation[i][size-1][k].alive_neighbors++;
@@ -203,7 +226,7 @@ int main(int argc, char *argv[])
 							current_generation[i][j][k+1].alive_neighbors++;
 						else
 							current_generation[i][j][0].alive_neighbors++;
-						if(k-1 > 0)
+						if(k-1 >= 0)
 							current_generation[i][j][k-1].alive_neighbors++;
 						else
 							current_generation[i][j][size-1].alive_neighbors++;
@@ -227,7 +250,7 @@ int main(int argc, char *argv[])
 						current_generation[i][j][k].alive = 0;
 						current_generation[i][j][k].alive_neighbors = 0;
 					}
-					if(current_generation[i][j][k].alive == 0)
+					else
 					{	
 						if (current_generation[i][j][k].alive_neighbors >= 2 && current_generation[i][j][k].alive_neighbors <= 3)
 						{
