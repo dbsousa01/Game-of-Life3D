@@ -4,17 +4,111 @@
 #include <string.h>
 #include <stdbool.h>
 
+struct coordinates
+{
+    int x;
+    int y;
+    int z;
+};
+struct cell
+{
+    struct coordinates coordinates;
+    bool alive;
+    int alive_neighbors;
+};
+struct coordinates get_cell_coordinates(struct cell cell)
+{
+    return cell.coordinates;
+}
+int get_coordinate_x(struct coordinates coordinates)
+{
+    return coordinates.x;
+}
+int get_coordinate_y(struct coordinates coordinates)
+{
+    return coordinates.y;
+}
+int get_coordinate_z(struct coordinates coordinates)
+{
+    return coordinates.z;
+}
+void print_cell_coordinates(struct cell cell)
+{
+    struct coordinates temp;
+    int x, y, z;
+
+    temp = get_cell_coordinates(cell);
+    x = get_coordinate_x(temp);
+    y = get_coordinate_y(temp);
+    z = get_coordinate_z(temp);
+
+    printf("(%d,%d,%d) ", x, y, z);
+}
+void print_cell_neighbors(struct cell cell)
+{
+    printf("%d",cell.alive_neighbors);
+}
+void print_cell_status(struct cell cell)
+{
+    printf("%d ",cell.alive);
+}
+void print_generation_alive_status(struct cell ***generation, int size)
+{
+    int i, j, k;
+    /* PRINT */
+    for(i = 0; i < size; i++)
+    {
+        printf("\nz = %d\n", i);
+        for(j = 0; j < size; j++)
+        {
+            for(k = 0; k < size; k++)
+            {
+                print_cell_status(generation[i][j][k]);
+            }
+            printf("\n");
+        }
+    }
+}
+void print_generation_alive_neighbors(struct cell ***generation, int size)
+{
+    int i, j, k;
+    /* PRINT */
+    for(i = 0; i < size; i++)
+    {
+        printf("\nz = %d\n", i);
+        for(j = 0; j < size; j++)
+        {
+            for(k = 0; k < size; k++)
+            {
+                print_cell_neighbors(generation[i][j][k]);
+            }
+            printf("\n");
+        }
+    }
+}
+
+
+/*
+void print_dimension_x(struct cell)
+{
+
+}
+void print_dimension_y(struct cell)
+{
+
+}
+void print_dimension_z(struct cell)
+{
+
+}
+*/
+
+
+
+
 
 int main(int argc, char *argv[])
 {
-	struct cell
-	{
-		bool alive;
-		int alive_neighbors;
-		int x;
-		int y;
-		int z;
-	};
 	char *input_filename;
 	int size;
 
@@ -44,9 +138,9 @@ int main(int argc, char *argv[])
 			{
 				current_generation[i][j][k].alive = 0;
 				current_generation[i][j][k].alive_neighbors = 0;
-				current_generation[i][j][k].x = k;
-				current_generation[i][j][k].y = j;
-				current_generation[i][j][k].z = i;
+				current_generation[i][j][k].coordinates.x = k;
+				current_generation[i][j][k].coordinates.y = j;
+				current_generation[i][j][k].coordinates.z = i;
 			}
 		}
 	}
@@ -61,9 +155,9 @@ int main(int argc, char *argv[])
 			{
 				next_generation[i][j][k].alive = 0;
 				next_generation[i][j][k].alive_neighbors = 0;
-				next_generation[i][j][k].x = k;
-				next_generation[i][j][k].y = j;
-				next_generation[i][j][k].z = i;
+				next_generation[i][j][k].coordinates.x = k;
+				next_generation[i][j][k].coordinates.y = j;
+				next_generation[i][j][k].coordinates.z = i;
 			}
 		}
 	}
@@ -73,37 +167,8 @@ int main(int argc, char *argv[])
 	current_generation[1][1][1].alive = 1;
 
 	/* PRINT */
-	for(i = 0; i < size; i++)
-	{
-		printf("\nGeneration 0 Slice %d\n", i+1);
-		for(j = 0; j < size; j++)
-		{
-			for(k = 0; k < size; k++)
-			{
-				/* COORDINATES */
-				// printf("(%d,%d,%d) ", current_generation[i][j][k].x, current_generation[i][j][k].y, current_generation[i][j][k].z);
-				/* ALIVE STATUS */
-				printf("(%d) ", current_generation[i][j][k].alive);
-			}
-			printf("\n");
-		}
-	}
-	
-	// for(i = 0; i < size; i++)
-	// {
-	// 	printf("\nCurrent Generation Slice %d\n", i+1);
-	// 	for(j = 0; j < size; j++)
-	// 	{
-	// 		for(k = 0; k < size; k++)
-	// 		{
-	// 			/* COORDINATES */
-	// 			// printf("(%d,%d,%d) ", current_generation[i][j][k].x, current_generation[i][j][k].y, current_generation[i][j][k].z);
-	// 			/* ALIVE STATUS */
-	// 			printf("(%d,%d) ", current_generation[i][j][k].alive,current_generation[i][j][k].alive_neighbors);
-	// 		}
-	// 		printf("\n");
-	// 	}
-	// }
+    print_generation_alive_status(current_generation, size);
+
 	int p;
 	int iterations;
 	iterations = 2;
@@ -177,39 +242,7 @@ int main(int argc, char *argv[])
 		aux = current_generation;
 		current_generation = next_generation;
 		next_generation = aux;
-		for(i = 0; i < size; i++)
-		{
-			printf("\nGeneration %d Slice %d\n", p+1,i+1);
-			for(j = 0; j < size; j++)
-			{
-				for(k = 0; k < size; k++)
-				{
-					/* COORDINATES */
-					// printf("(%d,%d,%d) ", current_generation[i][j][k].x, current_generation[i][j][k].y, current_generation[i][j][k].z);
-					/* ALIVE STATUS */
-					printf("(%d) ", current_generation[i][j][k].alive);
-				}
-				printf("\n");
-			}
-		}
+
+        print_generation_alive_status(current_generation, size);
 	}
-
-	// /* PRINT */
-	// for(i = 0; i < size; i++)
-	// {
-	// 	printf("\n1 - Current Generation Slice %d\n", i+1);
-	// 	for(j = 0; j < size; j++)
-	// 	{
-	// 		for(k = 0; k < size; k++)
-	// 		{
-	// 			/* COORDINATES */
-	// 			// printf("(%d,%d,%d) ", current_generation[i][j][k].x, current_generation[i][j][k].y, current_generation[i][j][k].z);
-	// 			/* ALIVE STATUS */
-	// 			printf("(%d) ", current_generation[i][j][k].alive);
-	// 		}
-	// 		printf("\n");
-	// 	}
-	// }
-
-
 }
