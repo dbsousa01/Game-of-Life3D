@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "defs.h"
 #include "util.h"
+//Comments about the functions and their objective are on the corresponding .h
 
 omp_lock_t ** create_locks(int size)
 {
@@ -15,7 +16,7 @@ omp_lock_t ** create_locks(int size)
         locks[x] = (omp_lock_t *) malloc(size * sizeof(omp_lock_t));
         for(y = 0; y < size; y++)
         {
-            omp_init_lock(&(locks[x][y]));
+            omp_init_lock(&(locks[x][y])); //initialization of each cell to an unlocked state
         }
     }
     return locks;

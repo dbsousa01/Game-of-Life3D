@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "node.h"
+//Comments about the functions and their objective are on the corresponding .h
 
 struct node * add_node(struct node **head, int z, short status, int mode)
 {

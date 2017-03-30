@@ -4,7 +4,7 @@
 #include "cube.h"
 #include "defs.h"
 #include "util.h"
-
+//Comments about the functions and their objective are on the corresponding .h
 struct node *** create_cube(int size)
 {
     struct node ***cube;
@@ -86,9 +86,9 @@ void mark_neighbors(omp_lock_t **locks, struct node ***cube, int size)
     int x, y, z;
     int tmp;
 
-    #pragma omp for collapse(2) schedule(guided)
-    for(x = 0; x < size; x++)
-    {
+    #pragma omp for collapse(2) schedule(guided) //colapse specifies how many loops in this nested loop should be collapsed
+    for(x = 0; x < size; x++)					 //and divided between the threads according to the schedule (guided) 
+    {											 //to deal optimally with load balancing
         for(y = 0; y < size; y++)
         {
             aux = cube[x][y];
@@ -99,9 +99,9 @@ void mark_neighbors(omp_lock_t **locks, struct node ***cube, int size)
                     z = aux->z;
 
                     tmp = mod(x+1, size);
-                    omp_set_lock(&(locks[tmp][y]));
-                    add_node(&(cube[tmp][y]), z, DEAD, 1);
-                    omp_unset_lock(&(locks[tmp][y]));
+                    omp_set_lock(&(locks[tmp][y])); //locks are set so the add is only executed by one thread(eq to serial section)
+                    add_node(&(cube[tmp][y]), z, DEAD, 1);// it's useless to have n threads adding the same node...
+                    omp_unset_lock(&(locks[tmp][y])); //removes the locks
 
                     tmp = mod(x-1, size);
                     omp_set_lock(&(locks[tmp][y]));
