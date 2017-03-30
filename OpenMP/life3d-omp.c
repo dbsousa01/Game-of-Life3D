@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     int size;
     int x, y, z;
 
-    if(argv[] != 3){
+    if(argc!= 3){
     	printf("Unexpected arguments\n");
     	exit(-1);
     }
