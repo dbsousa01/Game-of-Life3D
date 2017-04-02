@@ -3,6 +3,7 @@
 #include "cube.h"
 #include "defs.h"
 #include "util.h"
+//Comments about the functions and their objective are on the corresponding .h
 
 struct node *** create_cube(int size)
 {
@@ -59,7 +60,7 @@ void determine_next_generation(struct node ***cube, int size)
             {
                 if(aux->status == ALIVE)
                 {
-                    if(aux->alive_neighbors < 2 || aux->alive_neighbors > 4)
+                    if(aux->alive_neighbors < 2 || aux->alive_neighbors > 4) //conditions to determine if the cell is going to live
                     {
                         aux->status = DEAD;
                     }
@@ -91,7 +92,7 @@ void mark_neighbors(struct node ***cube, int size)
             while(aux != NULL)
             {
                 if(aux->status == ALIVE)
-                {
+                {   //goes to the neighbours of the cells that are alive and adds a dead node since the alived ones are stored in a counter
                     add_node(&(cube[mod(x+1, size)][y]), aux->z, DEAD, 1);
                     add_node(&(cube[mod(x-1, size)][y]), aux->z, DEAD, 1);
                     add_node(&(cube[x][mod(y+1, size)]), aux->z, DEAD, 1);

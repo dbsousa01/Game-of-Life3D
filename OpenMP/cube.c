@@ -141,9 +141,9 @@ void purge(struct node ***cube, int size)
     struct node *temp;
     int x, y;
 
-    #pragma omp for collapse(2) schedule(guided)
-    for(x = 0; x < size; x++)
-    {
+    #pragma omp for collapse(2) schedule(guided)//colapse specifies how many loops in this nested loop should be collapsed
+    for(x = 0; x < size; x++)                   //and divided between the threads according to the schedule (guided)
+    {                                           //to deal optimally with load balancing
         for(y = 0; y < size; y++)
         {
             head = &(cube[x][y]);

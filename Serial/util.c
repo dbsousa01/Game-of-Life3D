@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "defs.h"
 #include "util.h"
+//Comments about the functions and their objective are on the corresponding .h
 
 int mod(int a, int b)
 {

@@ -33,7 +33,8 @@ Goes through the cube, selects the alive cells and marks each of its neighbours 
 void purge(struct node ***cube, int size);
 /****************************************************************************************************************************************
 purge:
-
+Transverses through the cube and frees all cells that are dead, since they are no longer needed. The important ones for the next 
+generation are the ones that are alive.
 ****************************************************************************************************************************************/
 
 #endif

@@ -19,13 +19,25 @@ int main(int argc, char *argv[])
     int size;
     int x, y, z;
 
+    if(argc!= 3){
+    	printf("Unexpected arguments\n");
+    	exit(-1);
+    }
     /* ADD ARGUMENT NUMBER AND TYPE CHECKING, ETC */
     input_filename = (char *) malloc((strlen(argv[1]) * sizeof(char)) + 1);
     strcpy(input_filename, argv[1]);
     iterations = atoi(argv[2]);
+    if(iterations == 0){ //in case the atoi function got an invalid conversion
+    	printf("Error setting the iteration number\n");
+    	exit(-1);
+    }
 
     /* OPEN INPUT */
     input_fd = fopen(input_filename, "r");
+    if(input_fd ==NULL){ // Unexisting file in directory
+    	perror("Error:");
+    	exit(-1);
+    }
     free(input_filename);
 
     /* READ SIZE */
